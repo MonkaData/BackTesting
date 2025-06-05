@@ -37,8 +37,21 @@ def moving_average_crossover(prices: pd.Series, short_window: int = 20, long_win
 
     return StrategyResult(equity_curve=pd.Series(equity_curve, index=prices.index))
 
+
+def dollar_cost_averaging(prices: pd.Series, investment: float = 100.0) -> StrategyResult:
+    """Invest a fixed amount at each time step."""
+    shares = 0.0
+    equity_curve = []
+
+    for price in prices:
+        shares += investment / price
+        equity_curve.append(shares * price)
+
+    return StrategyResult(equity_curve=pd.Series(equity_curve, index=prices.index))
+
 # Map strategy names to functions
 STRATEGIES = {
     "Buy and Hold": buy_and_hold,
     "MA Crossover": moving_average_crossover,
+    "DCA": dollar_cost_averaging,
 }
